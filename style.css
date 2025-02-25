@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 50px;
+    /*深灰色*/
+    background-color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #ffffff;
+}
+
+/* 姓名字段为白色
+ */
+label{
+    color: #ffffff;
+}
+
+form {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    background-color: rgb(38, 86, 163) 148 225;
+    color: rgb(50, 120, 232) 148 225;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: transparent;
+    border: 2px solid #ffffff;
+}
+
+.response {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #333;
+    border: 1px solid #333;
+}
+
+.deep-container {
+    background: #121212;  /* 比原背景更深的颜色 */
+    padding: 40px;
+    border-radius: 12px;  /* 圆角效果 */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);  /* 层次感投影 */
+    max-width: 400px;  /* 限制宽度 */
+    margin: 20px auto;  /* 居中显示 */
+}
+
+.button-container {
+    display: flex;            /* 使用flexbox布局 */
+    gap: 30px;                /* 设置按钮间距 */
+  }
+
+  button {
+    padding: 10px 20px;       /* 设置按钮的内边距 */
+    font-size: 16px;          /* 设置按钮文字的大小 */
+  }
+
+  input[type="text"], input[type="email"], input[type="textarea"] {
+    color: #ffffff;  /* 设置为绿色，修改为你需要的颜色 */
+}
