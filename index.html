@@ -8,52 +8,66 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class = "deep-container">
+    <div class="deep-container">
         <h1>RUC小喇叭</h1>
-        <form id="myForm">
+        <form id="myForm" method="POST">
             <input type="hidden" id="action" name="action" value="register">
+            
             <label for="name">用户名：</label>
             <input type="text" id="name" name="name" required>
 
             <label for="email">邮箱：</label>
             <input type="email" id="email" name="email" required>
+            
             <div class="button-container">
-                <button type="submit" id="registerBtn">注册</button>
-                <button type="submit" id = "loginBtn">登录</button>
+                <button type="button" id="registerBtn">注册</button>
+                <button type="button" id="loginBtn">登录</button>
             </div>
         </form>
     </div>
-    
-
-   
 
     <script>
-     
+        // 用于处理表单提交的函数
         function fetchData(event) {
-            event.preventDefault();  // 防止表单的默认提交
+            event.preventDefault();  // 防止表单默认提交
 
-            // 判断是注册还是登录
-            let action = 'register'; // 默认注册
+            // 判断是注册还是登录，修改 action 字段的值
+            let action = 'register';  // 默认操作为注册
             if (event.target.id === 'loginBtn') {
                 action = 'login';
             }
+            document.getElementById('action').value = action;  // 更新 action 字段的值
 
-            // 发送数据到后端
+            // 获取表单数据
+            const formData = new FormData(document.getElementById("myForm"));
+
+            // 使用 fetch 发送数据到后端
             fetch("http://godjupit.com/process.php", {
                 method: "POST",
-                body: new FormData(document.getElementById("myForm"))
+                body: formData
             })
             .then(response => response.text())
-            
+            .then(data => {
+                console.log('response:', data);
+                if(data === "success_register!"){
+                    alert("注册成功");
+                    window.location.href = "http://godjupit.com/register.html";
+                }else if(data === "success_login!"){
+                    alert("登录成功");
+                    window.location.href = "http://godjupit.com/register.html";
+                }else if(data === "fail_register"){
+                    alert("该邮箱或用户名已被注册，请选择其他邮箱或用户名!");
+               
+                }
+            })
             .catch(error => {
                 console.error('Error:', error);
             });
         }
 
-        // 给按钮绑定事件
+        // 给按钮绑定点击事件
         document.getElementById("registerBtn").addEventListener("click", fetchData);
         document.getElementById("loginBtn").addEventListener("click", fetchData);
-
     </script>
 </body>
 </html>
