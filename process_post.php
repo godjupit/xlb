@@ -12,7 +12,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
-    //如果没有用户表，创建用户表
+    // 如果没有帖子表，创建帖子表
     $sql = "CREATE TABLE IF NOT EXISTS posts (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_name VARCHAR(50) NOT NULL,
@@ -24,8 +24,10 @@ try {
     $pdo->exec($sql);
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 获取表单数据
-        $userName = $_POST['userName'];
-        $content = $_POST['content'];
+        $userName = htmlspecialchars($_POST['userName'], ENT_QUOTES, 'UTF-8');
+        $content = htmlspecialchars($_POST['content'], ENT_QUOTES, 'UTF-8');
+        
+
         // 插入用户id
         
         // 插入帖子
