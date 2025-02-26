@@ -14,27 +14,34 @@ try {
 
     // 如果没有帖子表，创建帖子表
     $sql = "CREATE TABLE IF NOT EXISTS posts (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+          id INT AUTO_INCREMENT PRIMARY KEY,
         user_name VARCHAR(50) NOT NULL,
         content TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         user_id INT NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )";
     $pdo->exec($sql);
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 获取表单数据
         $userName = htmlspecialchars($_POST['userName'], ENT_QUOTES, 'UTF-8');
         $content = htmlspecialchars($_POST['content'], ENT_QUOTES, 'UTF-8');
-        
+        $user_id = $_POST['user_id'];
+       
 
         // 插入用户id
         
-        // 插入帖子
         $stmt = $pdo->prepare("INSERT INTO posts (user_name, content) VALUES (:userName, :content)");
+
+    
+        // 绑定参数
         $stmt->bindParam(':userName', $userName);
         $stmt->bindParam(':content', $content);
+        //$stmt->bindParam(':user_id', $user_id);
+
+        // 执行插入操作
         $stmt->execute();
+
 
         // 返回成功响应
         echo json_encode(['success' => true]);

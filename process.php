@@ -56,8 +56,7 @@ try {
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            session_start();
-            $_SESSION['user_id'] = $pdo->lastInsertId();
+           
            // 假设这里是注册的成功响应
             echo json_encode([
                 'status' => 'success_register',

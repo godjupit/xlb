@@ -108,12 +108,13 @@
 
             let userName = document.getElementById('userName').value;
             let content = document.getElementById('content').value;
-
+            let user_id = sessionStorage.getItem('user_id');
             // 创建表单数据对象
             const formData = new FormData();
             formData.append('userName', userName);
             formData.append('content', content);
-            //传递用户id
+            formData.append('user_id', user_id);
+           
             
             // 发送数据到后端
             fetch('process_post.php', {
