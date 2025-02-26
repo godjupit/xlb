@@ -31,13 +31,14 @@ try {
 
         // 插入用户id
         
-        $stmt = $pdo->prepare("INSERT INTO posts (user_name, content) VALUES (:userName, :content)");
-
+        //$stmt = $pdo->prepare("INSERT INTO posts (user_name, content) VALUES (:userName, :content)");
+        $stmt = $pdo->prepare("INSERT INTO posts (user_id, user_name, content) VALUES (:user_id, :userName, :content)");
     
         // 绑定参数
         $stmt->bindParam(':userName', $userName);
         $stmt->bindParam(':content', $content);
-        //$stmt->bindParam(':user_id', $user_id);
+
+        $stmt->bindParam(':user_id', $user_id);
 
         // 执行插入操作
         $stmt->execute();
