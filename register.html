@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -87,6 +90,19 @@
 
     <script>
         // 处理表单提交
+        window.onload = function(){
+            if(!sessionStorage.getItem('user_id')){
+                console.log('未登录');
+                // 未登录，跳转到登录页面
+                alert('请先登录');
+                window.location.href = "http://godjupit.com/index.html";
+            }else{
+                console.log('已登录');
+                // 页面加载时加载所有帖子
+                loadPosts();
+            }
+        }
+        
         document.getElementById('postForm').addEventListener('submit', function(event) {
             event.preventDefault();  // 防止表单默认提交
 
@@ -97,7 +113,8 @@
             const formData = new FormData();
             formData.append('userName', userName);
             formData.append('content', content);
-
+            //传递用户id
+            
             // 发送数据到后端
             fetch('process_post.php', {
                 method: 'POST',
@@ -141,8 +158,7 @@
                 });
         }
 
-        // 页面加载时加载所有帖子
-        window.onload = loadPosts;
+        
     </script>
 </body>
 </html>

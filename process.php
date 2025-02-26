@@ -45,7 +45,9 @@ try {
 
             if ($userCount > 0) {
                 // 如果已存在用户，返回错误信息
-                echo "fail_register";
+                echo json_encode([
+                    'status' => 'fail_register'
+                ]);
                 exit;
             }
 
@@ -54,9 +56,14 @@ try {
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
+            session_start();
+            $_SESSION['user_id'] = $pdo->lastInsertId();
+           // 假设这里是注册的成功响应
+            echo json_encode([
+                'status' => 'success_register',
+                'user_id' => $pdo->lastInsertId() // 假设这是从数据库中查询到的用户ID
+            ]);
 
-            // 返回成功信息
-            echo "success_register"; // 返回给前端注册成功的标识
             exit;
 
         } elseif($action === 'login') {
@@ -69,9 +76,12 @@ try {
 
             // 如果用户存在，输出欢迎信息
             if ($user) {
-                
-                echo "success_login!";
-                
+                session_start();
+                $_SESSION['user_id'] = $user['id'];
+                echo json_encode([
+                    'status' => 'success_login',
+                    'user_id' => $user['id']  // 假设这是从数据库中查询到的用户ID
+                ]);
                 exit;
             } else {
                 // 如果用户不存在，输出错误信息

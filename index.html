@@ -46,16 +46,20 @@
                 method: "POST",
                 body: formData
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
                 console.log('response:', data);
-                if(data === "success_register!"){
+                if(data.status === "success_register"){
                     alert("注册成功");
+                    sessionStorage.setItem('user_id', data.user_id);  
+                    // 存储用户ID等
+
                     window.location.href = "http://godjupit.com/register.html";
-                }else if(data === "success_login!"){
+                }else if(data.status === "success_login"){
                     alert("登录成功");
+                   sessionStorage.setItem('user_id', data.user_id);  
                     window.location.href = "http://godjupit.com/register.html";
-                }else if(data === "fail_register"){
+                }else if(data.status === "fail_register"){
                     alert("该邮箱或用户名已被注册，请选择其他邮箱或用户名!");
                
                 }
@@ -63,6 +67,10 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+
+
+
+          
         }
 
         // 给按钮绑定点击事件

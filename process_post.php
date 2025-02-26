@@ -17,14 +17,17 @@ try {
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_name VARCHAR(50) NOT NULL,
         content TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        user_id INT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id)
     )";
     $pdo->exec($sql);
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // 获取表单数据
         $userName = $_POST['userName'];
         $content = $_POST['content'];
-
+        // 插入用户id
+        
         // 插入帖子
         $stmt = $pdo->prepare("INSERT INTO posts (user_name, content) VALUES (:userName, :content)");
         $stmt->bindParam(':userName', $userName);
