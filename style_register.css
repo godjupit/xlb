@@ -57,3 +57,22 @@
             color: #888;
             font-size: 12px;
         }
+        /* <button class="like-btn" */
+        .like-btn {
+            background-color: transparent;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .delete-btn {
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+       .like-count{
+            color: white;
+       }
