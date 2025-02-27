@@ -30,7 +30,7 @@
             border: 1px solid #444;
         }
         .post-form button {
-            background-color: #333;
+            background-color: #62ae7a;
             color: #fff;
             border: none;
             padding: 10px 20px;
@@ -38,7 +38,7 @@
             border-radius: 5px;
         }
         .post-form button:hover {
-            background-color: #444;
+            background-color: #60e462;
         }
         .post {
             background-color: #1e1e1e;
@@ -76,3 +76,82 @@
        .like-count{
             color: white;
        }
+
+      .notice {
+            background-color: #1e1e1e;
+            padding : 10px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+            width: 92%;
+      }
+
+      
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px; /* 圆角效果 */
+            padding: 10px;  /* 使容器有足够的内边距 */
+            width: 92%;
+            margin-left: auto;
+            margin-right: auto;
+            align-items: stretch; /* 使按钮高度与容器一致 */
+        }
+        
+        .tabs button {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 12px 20px; /* 调整上下内边距，确保按钮高度和容器一致 */
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 12px; /* 圆角效果 */
+            margin: 5px 15px; /* 给按钮之间适当间距 */
+            height: 100%;  /* 使按钮的高度与容器对齐 */
+            display: flex;
+            align-items: center; /* 确保文本垂直居中 */
+            justify-content: center; /* 确保文本水平居中 */
+            width: 150px;
+            /* 按钮大小一样 */
+            
+        }
+        
+        .tabs button.active {
+            background-color: #2d8dc4;
+        }
+
+
+        .tabs button:hover {
+            background-color: #555;
+        }
+
+
+        .blog-form {
+            margin: 20px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            width: 93%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px;
+        }
+        
+        .blog-form input {
+            margin-bottom: 10px;
+        }
+        
+        .blog-form button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        .blog-form button:hover {
+            background-color: #0056b3;
+        }
+        
