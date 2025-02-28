@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RUC小喇叭</title>
     <link rel="stylesheet" href="style_register.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.10/lib/marked.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <header>RUC小喇叭</header>
-    
-    <!-- 公告栏-->
+
+    <!-- 公告栏 -->
     <div class="notice">
         <h2>公告</h2>
         <p>欢迎来到XLB，吧主正在吐血爆肝，新功能即将上线</p>
     </div>
-    
+
+    <!-- 按钮切换区域 -->
     <div class="tabs">
         <button id="post" class="post-button" onclick="switchTab('post')">发帖</button>
         <button id="blog" class="blog-button" onclick="switchTab('blog')">写博客</button>
@@ -34,52 +34,45 @@
                     <button type="submit">发布</button>
                 </form>
             </div>
-    
             <!-- 帖子展示 -->
-            <div id="postsContainer">
-                <!-- 这里将通过 JavaScript 动态加载帖子 -->
-            </div>
+            <div id="postsContainer"></div>
         </div>
     </div>
 
     <!-- 写博客区域 -->
-    <div id="blogContent" class="content" style="display: none;">
+    <div id="blogContent" class="content" style="display: none;">   
         <div class="container">
-            <!-- 写博客表单 -->
+            <!-- 上传博客文件 -->
             <div class="blog-form">
-                <h2>上传博客文件(markdown)</h2>
+                <h2>上传博客文件 (Markdown)</h2>
                 <form id="blogUploadForm" enctype="multipart/form-data">
-                    <input type="file" id="mdFile" name="mdFile" accept=".md" required>
+                    <input type="file" id="mdFile" name="mdFile" accept=".md" onchange="handleFile(event)"  required>
                     <button type="submit">上传并显示博客</button>
                 </form>
             </div>
-
             <!-- 博客展示 -->
-             <div id = "blogDisplay">
-                <!-- 这里将通过 JavaScript 动态加载博客 -->
-             </div>
+            <div id="blogsContainer"></div>
         </div>
     </div>
 
     <script>
-        // 页面加载时检查用户登录状态
-        window.onload = function(){
-            if(!sessionStorage.getItem('user_id')){
-                console.log('未登录');
-                // 未登录，跳转到登录页面
+
+        
+
+
+        window.onload = function() {
+            if (!sessionStorage.getItem('user_id')) {
                 alert('请先登录');
                 window.location.href = "http://godjupit.com/index.html";
-            }else{
-                console.log('已登录');
-                // 页面加载时加载所有帖子
-                loadPosts();
+            } else {
+                loadPosts(); // 加载帖子
+                loadAllBlogs(); // 加载博客
             }
-        }
-        
+        };
+
         // 发帖表单提交
         document.getElementById('postForm').addEventListener('submit', function(event) {
-            event.preventDefault();  // 防止表单默认提交
-
+            event.preventDefault();
             let userName = document.getElementById('userName').value;
             let content = document.getElementById('content').value;
             let user_id = sessionStorage.getItem('user_id');
@@ -95,15 +88,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('帖子发布成功!');
-                    loadPosts();  // 刷新帖子列表
+                    alert('弹窗哥又回来了')
+                    loadPosts(); // 刷新帖子
                 } else {
                     alert('发布失败，请重试');
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            .catch(error => console.error('Error:', error));
         });
 
         // 加载帖子
@@ -112,8 +103,7 @@
                 .then(response => response.json())
                 .then(posts => {
                     const postsContainer = document.getElementById('postsContainer');
-                    postsContainer.innerHTML = '';  // 清空现有的帖子
-
+                    postsContainer.innerHTML = '';
                     posts.forEach(post => {
                         const postDiv = document.createElement('div');
                         postDiv.classList.add('post');
@@ -125,80 +115,103 @@
                         postsContainer.appendChild(postDiv);
                     });
                 })
-                .catch(error => {
-                    console.error('Error loading posts:', error);
-                });
+                .catch(error => console.error('Error loading posts:', error));
         }
 
-        // 切换显示发帖和写博客
+        // 切换内容显示
         function switchTab(tab) {
-            // 先隐藏所有内容区域
             document.getElementById('postContent').style.display = 'none';
             document.getElementById('blogContent').style.display = 'none';
 
-            // 隐藏所有按钮的激活状态
             document.getElementById('post').classList.remove('active');
             document.getElementById('blog').classList.remove('active');
 
-            // 显示对应的内容区域
             if (tab === 'post') {
                 document.getElementById('postContent').style.display = 'block';
                 document.getElementById('post').classList.add('active');
             } else {
                 document.getElementById('blogContent').style.display = 'block';
                 document.getElementById('blog').classList.add('active');
+                loadAllBlogs();
             }
         }
 
-        document.getElementById('blogUploadForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // 阻止表单的默认提交行为
-        
-            // 获取上传的文件
-            const file = document.getElementById('mdFile').files[0];
-        
-            if (file) {
-                // 读取文件内容
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const mdContent = e.target.result; // 获取文件内容（Markdown格式）
-                    
-                    // 解析Markdown内容
-                    const htmlContent = marked(mdContent); // 使用 marked.js 解析为 HTML
-                    
-                    // 提取 Markdown 的主题和部分内容
-                    const theme = getTitle(mdContent); // 获取 Markdown 文件的标题
-                    const preview = getPreview(mdContent); // 获取前几个段落的内容
-        
-                    // 显示主题和部分内容
-                    document.getElementById('blogDisplay').innerHTML = `
-                        <h3>${theme}</h3>
-                        <p>${preview}</p>
-                        <div>${htmlContent}</div>
-                    `;
-                };
+        // 上传博客文件
+    
+
+        // 上传文件（博客）
+        function handleFile(event){
+            const file = event.target.files[0];
+
+            const formdata = new FormData();
+            formdata.append('mdFile', file);
+
+
+
+            marked.setOptions({
+                renderer: new marked.Renderer(),
+                highlight: function(code, language) {
+                    return '<pre class="code">' + code + '</pre>';
+                },
+                sanitize: true  // 启用安全模式，防止HTML标签被执行
+            });
+            fetch('http://godjupit.com/upload_blog.php', {
+                method: 'POST',
+                body: formdata
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                } else {
+                    console.log(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+
+            
+            //document.getElementById('fileContent').innerHTML = marked.parse(content);
                 
-                reader.readAsText(file); // 读取文件内容
-            }
-        });
-        
-        // 提取 Markdown 文件的标题（假设第一行是主题）
-        function getTitle(mdContent) {
-            const lines = mdContent.split('\n');
-            const firstLine = lines[0];
-            if (firstLine.startsWith('# ')) {
-                return firstLine.substring(2); // 去除标题前的 "# " 符号
-            }
-            return '无标题';
         }
+           
+        function loadAllBlogs() {
+            fetch('load_blog.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const blogsContainer = document.getElementById('blogsContainer');
+                        blogsContainer.innerHTML = ''; // 清空之前的博客内容
         
-        // 提取 Markdown 文件的前几行内容作为预览（例如前 200 个字符）
-        function getPreview(mdContent) {
-            const previewLength = 100; // 预览的长度
-            const previewContent = mdContent.slice(0, previewLength);
-            return previewContent + '...'; // 简单的内容预览
-        }
-        
-    </script>
+                        data.blogs.forEach(blog => {
+                            const postDiv = document.createElement('div');
+                            postDiv.classList.add('blog');
 
+                            marked.setOptions({
+                                renderer: new marked.Renderer(),
+                                highlight: function(code, language) {
+                                    return '<pre class="code">' + code + '</pre>';
+                                },
+                                sanitize: true  // 启用安全模式，防止HTML标签被执行
+                            });
+
+                           
+                            $content = marked.parse(blog.filedata);
+                            postDiv.innerHTML = `
+                                <div class="content">${$content}</div>  <!-- 直接显示文件内容 -->
+                            `;
+                            blogsContainer.appendChild(postDiv);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading blogs:', error);
+                });
+        }
+        
+       
+    </script>
 </body>
 </html>

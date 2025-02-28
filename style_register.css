@@ -154,4 +154,22 @@
         .blog-form button:hover {
             background-color: #0056b3;
         }
+
+
+        
+        #blogsContainer {
+            background-color: #121212;  /* 背景颜色 */
+            padding: 20px;  /* 内边距 */
+            border-radius: 8px;  /* 圆角边框 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* 阴影效果 */
+            margin-top: 20px;  /* 与其他元素的间距 */
+        }
+        
+        #blogsContainer .blog {
+            background-color: #1e1e1e;  /* 每个博客的背景颜色 */
+            
+            padding: 15px;  /* 内边距 */
+            margin-bottom: 10px;  /* 每个博客之间的间距 */
+            border-radius: 5px;  /* 圆角 */
+        }
         

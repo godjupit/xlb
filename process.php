@@ -76,7 +76,7 @@ try {
             // 如果用户存在，输出欢迎信息
             if ($user) {
                 session_start();
-                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_id'] = $users['id'];
                 echo json_encode([
                     'status' => 'success_login',
                     'user_id' => $user['id']  // 假设这是从数据库中查询到的用户ID
