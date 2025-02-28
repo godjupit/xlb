@@ -6,6 +6,7 @@
     <title>RUC小喇叭</title>
     <link rel="stylesheet" href="style_register.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://rawgit.com/leizongmin/js-xss/master/dist/xss.js"></script>
 </head>
 <body>
     <header>RUC小喇叭</header>
@@ -13,7 +14,7 @@
     <!-- 公告栏 -->
     <div class="notice">
         <h2>公告</h2>
-        <p>欢迎来到XLB，吧主正在吐血爆肝，新功能即将上线</p>
+        <p>欢迎来到XLB，吧主正在吐血爆肝，博客功能上线了！！！</p>
     </div>
 
     <!-- 按钮切换区域 -->
@@ -143,10 +144,17 @@
         function handleFile(event){
             const file = event.target.files[0];
 
+
+            if(!file.name.endsWith('.md')){
+                alert('请上传 Markdown 文件');
+                return;
+            }
+
+
             const formdata = new FormData();
             formdata.append('mdFile', file);
 
-
+            
 
             marked.setOptions({
                 renderer: new marked.Renderer(),
@@ -189,6 +197,7 @@
                             const postDiv = document.createElement('div');
                             postDiv.classList.add('blog');
 
+
                             marked.setOptions({
                                 renderer: new marked.Renderer(),
                                 highlight: function(code, language) {
@@ -197,8 +206,10 @@
                                 sanitize: true  // 启用安全模式，防止HTML标签被执行
                             });
 
+
+
                            
-                            $content = marked.parse(blog.filedata);
+                            $content = marked.parse(filterXSS(blog.filedata));
                             postDiv.innerHTML = `
                                 <div class="content">${$content}</div>  <!-- 直接显示文件内容 -->
                             `;
