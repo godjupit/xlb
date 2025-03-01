@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style_register.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://rawgit.com/leizongmin/js-xss/master/dist/xss.js"></script>
+    <script type="text/javascript" src="DOMPurify/dist/purify.min.js"></script>
 </head>
 <body>
     <header>RUC小喇叭</header>
@@ -48,7 +49,9 @@
                 <h2>上传博客文件 (Markdown)</h2>
                 <form id="blogUploadForm" enctype="multipart/form-data">
                     <input type="file" id="mdFile" name="mdFile" accept=".md" onchange="handleFile(event)"  required>
-                    <button type="submit">上传并显示博客</button>
+                    <button type="submit" onclick="sessionStorage.setItem('activeTab','blog'); location.reload();">上传并显示博客</button>
+
+
                 </form>
             </div>
             <!-- 博客展示 -->
@@ -68,8 +71,16 @@
             } else {
                 loadPosts(); // 加载帖子
                 loadAllBlogs(); // 加载博客
+        
+                // 如果上传时设置了 activeTab 为 blog，则切换到博客页面
+                let activeTab = sessionStorage.getItem('activeTab');
+                if (activeTab === 'blog') {
+                    switchTab('blog');
+                    sessionStorage.removeItem('activeTab');  // 清除标志
+                }
             }
         };
+        
 
         // 发帖表单提交
         document.getElementById('postForm').addEventListener('submit', function(event) {
@@ -143,7 +154,7 @@
 
         // 上传文件（博客）
         function handleFile(event){
-            const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+            const MAX_SIZE = 1024 * 1024; // 5MB
             const file = event.target.files[0];
 
 
@@ -161,17 +172,11 @@
             const formdata = new FormData();
             sessionStorage.getItem('user_id');
             formdata.append('user_id', sessionStorage.getItem('user_id'));
-            formdata.append('mdFile',filterXSS(filterXSS( file)));
+            formdata.append('mdFile',file);
 
             
 
-            marked.setOptions({
-                renderer: new marked.Renderer(),
-                highlight: function(code, language) {
-                    return '<pre class="code">' + code + '</pre>';
-                },
-                sanitize: true  // 启用安全模式，防止HTML标签被执行
-            });
+            
             fetch('http://godjupit.com/upload_blog.php', {
                 method: 'POST',
                 body: formdata
@@ -207,20 +212,21 @@
                             postDiv.classList.add('blog');
 
 
-                            marked.setOptions({
-                                renderer: new marked.Renderer(),
-                                highlight: function(code, language) {
-                                    return '<pre class="code">' + code + '</pre>';
-                                },
-                                sanitize: true  // 启用安全模式，防止HTML标签被执行
-                            });
-
-
-
                            
-                            $content = marked.parse(filterXSS(blog.filedata));
+                            
+                            //const clean = DOMPurify.sanitize(blog.filedata, { USE_PROFILES: { html: true } });
+
+                            
+                           
+                            $dirtyHtml = marked.parse(blog.filedata);
+                            
+                            $clean = DOMPurify.sanitize($dirtyHtml, {
+                                ALLOWED_TAGS: ['b', 'i', 'u', 'strong', 'em', 'p', 'br', 'ul', 'li', 'ol', 'h1', 'h2', 'h3'],
+                                ALLOWED_ATTR: [] 
+                            });
+                           
                             postDiv.innerHTML = `
-                                <div class="content">${$content}</div>  <!-- 直接显示文件内容 -->
+                                <div class="content">${$clean}</div>  <!-- 直接显示文件内容 -->
                             `;
                             blogsContainer.appendChild(postDiv);
                         });
