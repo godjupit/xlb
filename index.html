@@ -57,7 +57,7 @@
                     window.location.href = "http://godjupit.com/register.html";
                 }else if(data.status === "success_login"){
                     alert("登录成功");
-                   sessionStorage.setItem('user_id', data.user_id);  
+                    sessionStorage.setItem('user_id', data.user_id);  
                     window.location.href = "http://godjupit.com/register.html";
                 }else if(data.status === "fail_register"){
                     alert("该邮箱或用户名已被注册，请选择其他邮箱或用户名!");

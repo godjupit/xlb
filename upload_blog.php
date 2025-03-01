@@ -21,7 +21,8 @@
     $sql = "CREATE TABLE IF NOT EXISTS files (
         id INT AUTO_INCREMENT PRIMARY KEY,
         filename VARCHAR(255),
-        filedata LONGBLOB NOT NULL
+        filedata LONGBLOB NOT NULL,
+        user_id INT NOT NULL
     )";
 
 
@@ -34,8 +35,10 @@
     // 读取文件内容
         
         $filedata = file_get_contents($filetmp);
+        $user_id = $_POST['user_id'];
         
-        $stmt = $pdo->prepare("INSERT INTO files (filedata) VALUES (:filedata)");
+        $stmt = $pdo->prepare("INSERT INTO files (filedata,user_id) VALUES (:filedata, :user_id)");
+        $stmt->bindParam(':user_id', $user_id);
         $stmt->bindParam(':filedata', $filedata);
         
         $stmt->execute();
